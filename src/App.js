@@ -1,9 +1,10 @@
-import Header from "./components/Header";
-import RegionList from "./components/RegionList";
-import CityList from "./components/CityList";
-import CityDetail from "./components/CityDetail";
+import Header from "./components/Header.js";
+import RegionList from "./components/RegionList.js";
+import CityList from "./components/CityList.js";
+import CityDetail from "./components/CityDetail.js";
+import {request} from "./components/api.js";
 
-export default function App() {
+export default function App($app) {
     this.state = {
         startIdx: 0,
         sortBy: '',
@@ -14,7 +15,31 @@ export default function App() {
 
     const header = new Header();
     const regionList = new RegionList();
-    const cityList = new CityList({$app, initialState : this.state.cities});
+    const cityList = new CityList({
+        $app,
+        initialState : this.state.cities,
+        handleItemClick: async (id) => {
+            history.pushState(null, null, `/city/${id}`);
+            this.setState({
+                ...this.state,
+                currentPage: `/city/${id}`,
+            });
+        },
+        handleLoadMore: async () => {
+            const newStartIdx = this.state.startIdx + 40;
+            const newCities = await request(newStartIdx, this.state.region, this.state.sortBy);
+            this.setState({
+                ...this.state,
+                startIdx: newStartIdx,
+                cities: {
+                    ...this.state.cities,
+                    cities: [...this.state.cities.cities, ...newCities.cities],
+                    isEnd: newCities.isEnd,
+                },
+            });
+        },
+    });
+
     const cityDetail = new CityDetail();
 
     this.setState = (newState) => {
@@ -22,7 +47,13 @@ export default function App() {
         cityList.setState(this.state.cities)
     };
 
-    const init = () => {};
+    const init = async () => {
+        const cities = await request(this.state.startIdx,this.state.region, this.state.sortBy, this.state.searchWord);
+        this.setState({
+            ...this.state,
+            cities: cities
+        });
+    };
 
     init();
 }
