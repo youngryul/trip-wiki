@@ -166,7 +166,7 @@ export default function App($app) {
         const urlPath = window.location.pathname;
 
         const prevRegion = urlPath.replace('/', '');
-        const prevPage = urlPath;
+        const prevPage = urlPath+ "/trip-wiki/index.html";
         const prevSortBy = getSortBy();
         const prevSearchWord = getSearchWord();
         const prevStartIdx = 0;

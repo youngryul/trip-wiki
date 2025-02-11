@@ -9,7 +9,7 @@ export default function Header({ $app, initialState, handleSortChange, handleSea
 
     this.template = () => {
         const { sortBy, currentPage, searchWord } = this.state;
-        let temp = `<div class="title"><a href="/">✈️ Trip Wiki</a></div>`;
+        let temp = `<div class="title"><a href="/trip-wiki/index.html">✈️ Trip Wiki</a></div>`;
         if (!currentPage.includes('/city/'))
             temp += `<div class="filter-search-container">
             <div class="filter">
